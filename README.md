@@ -2,192 +2,107 @@
 
 ## Overview
 
-The Personal AI Training Agent is a highly personalized, science-backed fitness coaching system that adapts to the user’s biometric data and curated research inputs. It leverages the OpenAI Agents SDK and integrates biometric data from devices like the Oura Ring to offer tailored workout plans that adjust in real-time to the user’s readiness and recovery metrics. This eliminates guesswork in fitness planning and ensures optimal performance and recovery.
+The Personal AI Training Agent is your personalized fitness coach that creates workout plans based on your body's readiness and fitness goals. It uses data from your Oura Ring (if you have one) and adapts your workouts to ensure optimal performance and recovery.
 
-## Core Features
+## What It Does
 
-- Multi-Agent System Using OpenAI Agents SDK: Implements a modular architecture with specialized agents, such as a Research Agent and an Orchestrator Agent, to handle distinct tasks within the system.
-- Dynamic Workout Plan Generation: Generates personalized Push–Pull–Legs (PPL) split workout plans in four-week progressive cycles.
-- Personalized Load and Intensity Calculation: Calculates optimal weights and intensity levels for each exercise based on the user’s performance history and readiness metrics.
-- Biometric Readiness Integration: Integrates data from the Oura Ring to assess the user’s readiness and recovery status.
-- Progress Tracking and Gamification: Tracks workout completion and awards points and badges to motivate the user.
-- Curated Knowledge Base Integration: Maintains an embedded knowledge base of fitness research to inform workout planning.
+- Creates personalized workout plans that adjust to your body's needs
+- Tracks your progress and keeps you motivated
+- Uses scientific research to inform workout recommendations
+- Integrates with Oura Ring to measure your recovery status
+- Calculates the right weights and intensity for your exercises
 
-## Project Structure
+## Quick Start Guide
 
-- `personal_ai_trainer/`: Main package
-  - `agents/`: Agent implementations
-    - `research_agent/`
-    - `orchestrator_agent/`
-    - `biometric_agent/`
-  - `database/`: Database interactions
-  - `knowledge_base/`: Knowledge base operations
-  - `cli/`: Command-line interface
-  - `utils/`: Utility functions
-  - `config/`: Configuration files
-  - `tests/`: Unit and integration tests
+### 1. Set Up Your Environment
 
-## Installation
+```bash
+# Clone the repository
+git clone <repository-url>
+cd pt-agent
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd pt-agent
-   ```
+# Create and activate a virtual environment (optional but recommended)
+python -m venv .venv
+# On Windows:
+.venv\Scripts\activate
+# On macOS/Linux:
+source .venv/bin/activate
 
-2. Create and activate a Python virtual environment (optional but recommended):
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+# Install the package in development mode
+uv pip install -e .
 
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Set up your configuration
+cp .env.example .env
+# Edit .env with your API keys and settings
+```
 
-4. Copy the example environment file and configure it:
-   ```bash
-   cp .env.example .env
-   ```
+### 2. Configure Your Settings
 
-## Configuration
+Edit the `.env` file with:
+- Your OpenAI API key
+- Oura Ring access token (if you have one)
+- Database connection details
 
-Edit the `.env` file to set up the necessary environment variables. Key variables include:
+### 3. Try These Commands
 
-- `OPENAI_API_KEY`: Your OpenAI API key for agent interactions.
-- `OURA_PERSONAL_ACCESS_TOKEN`: Token for accessing Oura Ring biometric data.
-- `DATABASE_URL`: Connection string for the database.
-- Other configuration options as needed for your setup.
+```bash
+# View today's workout plan
+uv run python -m personal_ai_trainer.cli.main plan today
 
-Ensure the `.env` file is kept secure and not shared publicly.
+# View your weekly workout plan
+uv run python -m personal_ai_trainer.cli.main plan week
 
-## Usage
+# Log a completed workout
+uv run python -m personal_ai_trainer.cli.main log workout --date 2023-05-05 --notes "Felt great today"
 
-The Personal AI Training Agent provides a CLI interface with several command groups:
+# Check your progress
+uv run python -m personal_ai_trainer.cli.main progress summary
+```
 
-### Plan Commands
+## Common Tasks
 
-- View today's workout plan:
-  ```bash
-  python -m personal_ai_trainer.cli.main plan today
-  ```
+### Workout Planning
 
-- View the weekly workout plan:
-  ```bash
-  python -m personal_ai_trainer.cli.main plan week
-  ```
+```bash
+# Generate a new workout plan with a specific goal
+uv run python -m personal_ai_trainer.cli.main plan generate --goal "Improve 5k time"
 
-- View workout plan for a specific day (YYYY-MM-DD):
-  ```bash
-  python -m personal_ai_trainer.cli.main plan day --date 2025-05-05
-  ```
+# View plan for a specific date
+uv run python -m personal_ai_trainer.cli.main plan day --date 2023-05-10
+```
 
-### Log Commands
+### Logging Your Workouts
 
-- Log a completed workout:
-  ```bash
-  python -m personal_ai_trainer.cli.main log workout --date 2025-05-05 --notes "Felt strong today"
-  ```
+```bash
+# Log a workout
+uv run python -m personal_ai_trainer.cli.main log workout --date 2023-05-05 --notes "Felt strong"
 
-- Log exercises performed:
-  ```bash
-  python -m personal_ai_trainer.cli.main log exercises --workout-id <id> --exercise "Squat" --sets 3 --reps 8 --weight 150
-  ```
+# Log specific exercises
+uv run python -m personal_ai_trainer.cli.main log exercise --name "Bench Press" --sets 3 --reps 10 --weight 50.5
 
-- View workout history:
-  ```bash
-  python -m personal_ai_trainer.cli.main log history
-  ```
+# View your workout history
+uv run python -m personal_ai_trainer.cli.main log history
+```
 
-### Research Commands
+### Adding Research
 
-- Add a research document:
-  ```bash
-  python -m personal_ai_trainer.cli.main research add --file path/to/document.pdf
-  ```
+```bash
+# Add a research document to improve your plans
+uv run python -m personal_ai_trainer.cli.main research add --file path/to/document.pdf
 
-- View all research documents:
-  ```bash
-  python -m personal_ai_trainer.cli.main research list
-  ```
-
-- Search research documents:
-  ```bash
-  python -m personal_ai_trainer.cli.main research search --query "hypertrophy training"
-  ```
-
-### Progress Commands
-
-- View progress statistics:
-  ```bash
-  python -m personal_ai_trainer.cli.main progress stats
-  ```
-
-- View earned badges:
-  ```bash
-  python -m personal_ai_trainer.cli.main progress badges
-  ```
-
-- View progress summary:
-  ```bash
-  python -m personal_ai_trainer.cli.main progress summary
-  ```
-
-## Scheduler Setup
-
-The system includes a scheduler that runs nightly to retrieve biometric data and adjust workout plans automatically.
-
-To set up the scheduler as a cron job:
-
-1. Open your crontab editor:
-   ```bash
-   crontab -e
-   ```
-
-2. Add the following line to run the scheduler script every day at 2 AM:
-   ```cron
-   0 2 * * * cd /path/to/pt-agent && /usr/bin/env python -m personal_ai_trainer.cli.main scheduler run >> scheduler.log 2>&1
-   ```
-
-3. Save and exit the editor.
-
-Make sure to replace `/path/to/pt-agent` with the actual path to your project directory.
-
-## System Architecture
-
-The Personal AI Training Agent is composed of the following components:
-
-- **Agents**: Specialized modules handling different aspects:
-  - Research Agent: Processes and manages fitness research documents.
-  - Biometric Agent: Retrieves and interprets biometric data from devices like the Oura Ring.
-  - Orchestrator Agent: Generates personalized workout plans based on inputs from other agents.
-
-- **Knowledge Base**: Stores and retrieves curated fitness research documents to inform planning.
-
-- **Database**: Manages persistent storage of user data, workout logs, plans, and research documents.
-
-- **CLI Interface**: Provides user interaction through command-line commands for planning, logging, research, and progress tracking.
-
-- **Scheduler**: Automates nightly data retrieval and workout plan adjustments.
+# Search the knowledge base
+uv run python -m personal_ai_trainer.cli.main research search --query "strength training"
+```
 
 ## Troubleshooting
 
-- **Issue**: CLI commands not found or fail to run.
-  - Ensure you are running commands from the project root directory.
-  - Verify your Python environment is activated and dependencies are installed.
+- **Commands not working?** Make sure your virtual environment is activated and you've installed the package with `uv pip install -e .`
 
-- **Issue**: Environment variables not loaded.
-  - Confirm `.env` file exists and is properly configured.
-  - Restart your terminal or IDE to reload environment variables.
+- **Missing data?** Check your `.env` file to ensure all API keys are correctly set
 
-- **Issue**: Scheduler cron job not running.
-  - Check cron logs for errors.
-  - Verify the cron job path and Python environment are correct.
-  - Ensure the scheduler command has executable permissions.
+- **Need more help?** Run any command with `--help` for more information:
+  ```bash
+  uv run python -m personal_ai_trainer.cli.main --help
+  ```
 
-- **Issue**: Database connection errors.
-  - Verify `DATABASE_URL` in `.env` is correct.
-  - Ensure the database server is running and accessible.
-
-For further assistance, consult the project documentation or open an issue on the repository.
+For more detailed information, see the original documentation or contact support.
