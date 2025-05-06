@@ -9,7 +9,7 @@ Provides a foundation class for all agents in the system, handling:
 - Error handling and logging
 """
 
-from typing import Any, Dict, List, Optional, Type, Union, Callable
+from typing import Any, Dict, List, Optional, Type, Callable
 import logging
 from agency_swarm.agents.agent import Agent as SwarmAgent
 from agency_swarm.tools import BaseTool

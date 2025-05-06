@@ -6,7 +6,7 @@ Handles agency structure setup, agent registration, message passing, and respons
 Author: Roo Mid
 """
 
-from typing import Any, Dict, List, Optional, Callable, Union
+from typing import Any, Dict, List, Optional, Union
 from agency_swarm.agency.agency import Agency
 from agency_swarm.agents.agent import Agent
 

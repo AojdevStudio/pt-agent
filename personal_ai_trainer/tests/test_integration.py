@@ -1,20 +1,12 @@
 # personal_ai_trainer/tests/test_integration.py
-import pytest
-from unittest.mock import patch, MagicMock, ANY
+from unittest.mock import patch, MagicMock
 import datetime
-import os
 
 # Import necessary components and models
 from personal_ai_trainer.database.models import (
-    UserProfile as DBUserProfile,
-    WorkoutPlan as DBWorkoutPlan,
-    Workout as DBWorkout,
-    Exercise as DBExercise,
     ReadinessMetrics as DBReadinessMetrics,
     KnowledgeBase as DBKnowledgeBase
 )
-from personal_ai_trainer.agents.research_agent.agent import ResearchAgent
-from personal_ai_trainer.agents.biometric_agent.agent import BiometricAgent
 from personal_ai_trainer.agents.orchestrator_agent.agent import OrchestratorAgent
 from personal_ai_trainer.cli.main import app as cli_app # Typer app
 from personal_ai_trainer.utils.scheduler import Scheduler
@@ -121,7 +113,6 @@ def test_02_knowledge_base_integration(mock_kb_get_supabase, mock_supabase_clien
     assert returned_id == doc_id
 
     # 2. Test searching for similar documents
-    query_text = "running cadence tips"
     query_embedding = [0.11] * 1536
     mock_get_embedding.return_value = query_embedding # Update mock for query
 
@@ -387,12 +378,6 @@ def test_06_cli_integration(runner, test_user_id):
         mock_instance.generate_workout_plan.assert_called_once_with(goal=goal, user_id=test_user_id) # Check args
 
     # 2. Test 'log' command (Adapting from original, assuming log command exists and works)
-    log_date_str = "2025-05-06"
-    log_type = "Cycling"
-    log_duration = "60"
-    log_intensity = "high"
-    workout_log_table = 'workout_logs'
-    mock_log_id = "log-1"
 
     # NOTE: The log command currently has placeholder logic and doesn't interact
     # with Supabase or agents. Skipping detailed mocking/patching for log command
@@ -565,7 +550,7 @@ def test_08_end_to_end_flow(
     # Mock new biometric data (lower readiness) via Oura mock
     mock_oura_wrapper_instance.get_readiness_data.return_value = [{'score': 60, 'summary_date': '2025-05-06'}] # Use wrapper instance
     # Mock Supabase insert for storing new biometrics
-    mock_insert_resp_bio2 = MagicMock(data=[{"metrics_id": "metrics-e2e-2"}], error=None)
+    MagicMock(data=[{"metrics_id": "metrics-e2e-2"}], error=None)
     # Patch the insert().execute() for this specific call (if adjustment logic inserts)
     # with patch.object(mock_supabase_client.table(readiness_table).insert.return_value, 'execute', return_value=mock_insert_resp_bio2) as mock_bio2_insert_execute:
     #     pass # Call adjustment logic here if it inserts

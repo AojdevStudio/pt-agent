@@ -6,7 +6,7 @@ registration, resolution, and lifecycle management of dependencies.
 """
 
 import inspect
-from typing import Any, Dict, Callable, Type, TypeVar, Optional, Union, get_type_hints
+from typing import Any, TypeVar
 
 T = TypeVar('T')
 

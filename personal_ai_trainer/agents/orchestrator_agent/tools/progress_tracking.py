@@ -1,6 +1,6 @@
 """Tool for tracking workout progress and implementing gamification."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 from agency_swarm.tools import BaseTool
 from pydantic import Field
 import datetime

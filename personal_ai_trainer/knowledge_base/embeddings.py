@@ -5,7 +5,7 @@ Provides functions to generate vector embeddings from text using OpenAI,
 calculate similarity between embeddings, and handle errors/retries.
 """
 
-from typing import List, Optional, Union, Dict, Any
+from typing import List
 import numpy as np
 import logging
 import os

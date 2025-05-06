@@ -5,10 +5,9 @@ This module provides a wrapper around the python-ouraring OuraClient for authent
 and data retrieval, with improved error handling and retry logic.
 """
 
-from typing import Any, Dict, Optional, List, Union, cast
-from datetime import datetime, timedelta, date
+from typing import Any, Dict, Optional, List, Union
+from datetime import datetime, date
 import os
-import time
 import logging
 
 from oura import OuraClient

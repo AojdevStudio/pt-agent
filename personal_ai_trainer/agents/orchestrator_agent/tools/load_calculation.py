@@ -99,13 +99,16 @@ class LoadCalculationTool(BaseTool):
         updated_plan = self.workout_plan.copy() # Avoid modifying the input dict directly
 
         for week_key, weekly_plan in updated_plan.items():
-            if not isinstance(weekly_plan, dict): continue # Skip if week data isn't a dict
+            if not isinstance(weekly_plan, dict): 
+                continue # Skip if week data isn't a dict
 
             for day_type, exercises in weekly_plan.items():
-                if not isinstance(exercises, list): continue # Skip if exercises aren't a list
+                if not isinstance(exercises, list): 
+                    continue # Skip if exercises aren't a list
 
                 for exercise_details in exercises:
-                    if not isinstance(exercise_details, dict): continue # Skip if exercise isn't a dict
+                    if not isinstance(exercise_details, dict): 
+                        continue # Skip if exercise isn't a dict
 
                     exercise_name = exercise_details.get("exercise")
                     base_intensity_mod = exercise_details.get("intensity_modifier", 1.0)

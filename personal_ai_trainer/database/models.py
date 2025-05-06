@@ -5,7 +5,7 @@ Defines base and entity models for user profiles, workout plans, logs,
 readiness metrics, and the knowledge base.
 """
 
-from typing import List, Optional, Any
+from typing import List, Optional
 from datetime import date
 from pydantic import BaseModel as PydanticBaseModel, Field
 

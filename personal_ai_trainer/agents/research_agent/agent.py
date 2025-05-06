@@ -116,7 +116,7 @@ class ResearchAgent(BaseAgent):
         
         # 1. Call OpenAI to process the document
         openai_client = get_openai_client()
-        response = openai_client.chat.completions.create(
+        openai_client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a research assistant that summarizes fitness documents."},
@@ -169,7 +169,7 @@ class ResearchAgent(BaseAgent):
         
         # 3. Call OpenAI to synthesize an answer based on the similar documents
         openai_client = get_openai_client()
-        response = openai_client.chat.completions.create(
+        openai_client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a fitness research assistant that answers questions based on the knowledge base."},

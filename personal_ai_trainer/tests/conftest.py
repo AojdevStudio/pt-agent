@@ -1,20 +1,15 @@
 # personal_ai_trainer/tests/conftest.py
 import pytest
-from unittest.mock import MagicMock, patch, ANY
+from unittest.mock import MagicMock, patch
 from typer.testing import CliRunner
-import datetime
 
 # Import Real Agent classes
 from personal_ai_trainer.agents.research_agent.agent import ResearchAgent
 from personal_ai_trainer.agents.biometric_agent.agent import BiometricAgent
 from personal_ai_trainer.agents.orchestrator_agent.agent import OrchestratorAgent
 from personal_ai_trainer.agents.biometric_agent.oura_client import OuraClientWrapper
-from personal_ai_trainer.di.container import DIContainer # Import DIContainer
 # Import the class whose method we need to patch
-from postgrest._sync.request_builder import SyncFilterRequestBuilder, SyncRequestBuilder
-from personal_ai_trainer.knowledge_base import repository as kb_repo # For TABLE_NAME
 # Import database models needed within fixtures
-from personal_ai_trainer.database.models import KnowledgeBase as DBKnowledgeBase
 
 # Constants
 TEST_USER_ID = "test-user-123"

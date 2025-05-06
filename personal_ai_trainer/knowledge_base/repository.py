@@ -5,7 +5,6 @@ Implements CRUD operations and similarity-based retrieval for research documents
 """
 
 from typing import List, Optional, Dict, Any
-from datetime import date
 from personal_ai_trainer.database.connection import get_supabase_client
 from personal_ai_trainer.database.models import KnowledgeBase
 from personal_ai_trainer.knowledge_base.embeddings import cosine_similarity

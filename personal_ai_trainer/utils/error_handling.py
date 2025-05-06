@@ -8,7 +8,7 @@ retry logic, and error conversion throughout the application.
 import logging
 import functools
 import time
-from typing import Callable, TypeVar, Any, Optional, Tuple, Union, Dict, List
+from typing import Callable, TypeVar, Any, Optional, Tuple, Union
 
 from personal_ai_trainer.exceptions import (
     PersonalAITrainerError, 

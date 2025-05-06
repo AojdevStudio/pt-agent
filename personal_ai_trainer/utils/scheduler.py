@@ -8,7 +8,6 @@ Author: Roo Mid
 """
 
 import logging
-import time
 import schedule  # Add the schedule module
 from datetime import datetime, timedelta, date
 from typing import Any, Dict, Optional, List
@@ -17,12 +16,9 @@ from personal_ai_trainer.database.connection import get_supabase_client
 from personal_ai_trainer.database.models import (
     ReadinessMetrics,
     WorkoutPlan,
-    UserProfile,
 )
 from personal_ai_trainer.agents.biometric_agent.oura_client import OuraClientWrapper # Corrected import path
 from personal_ai_trainer.agents.orchestrator_agent.agent import OrchestratorAgent
-from personal_ai_trainer.agents.biometric_agent.agent import BiometricAgent
-from personal_ai_trainer.agents.research_agent.agent import ResearchAgent
 
 # Setup logging
 logging.basicConfig(
@@ -142,7 +138,7 @@ class Scheduler:
         preferences = user.get("preferences", {})
         try:
             # Adjust plan using orchestrator agent
-            plan = self.orchestrator_agent.generate_workout_plan(user_id, preferences)
+            self.orchestrator_agent.generate_workout_plan(user_id, preferences)
             # Store/Update plan in database
             plan_id = f"{user_id}_{date.today().isocalendar()[1]}"
             plan_record = WorkoutPlan(

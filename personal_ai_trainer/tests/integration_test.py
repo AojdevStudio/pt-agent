@@ -1,27 +1,14 @@
-import pytest # Use pytest instead of unittest
-from unittest.mock import patch, MagicMock, ANY
-import os
+from unittest.mock import patch, MagicMock
 import datetime
-from typing import List
 
 # --- Updated Imports ---
-from personal_ai_trainer.database.connection import get_supabase_client
 from personal_ai_trainer.database.models import (
-    UserProfile as DBUserProfile,
-    WorkoutPlan as DBWorkoutPlan,
-    Workout as DBWorkout,
-    Exercise as DBExercise,
     ReadinessMetrics as DBReadinessMetrics,
     KnowledgeBase as DBKnowledgeBase
 )
-from personal_ai_trainer.agents.research_agent.agent import ResearchAgent
-from personal_ai_trainer.agents.biometric_agent.agent import BiometricAgent
-from personal_ai_trainer.agents.orchestrator_agent.agent import OrchestratorAgent
 from personal_ai_trainer.cli.main import app as cli_app
-from typer.testing import CliRunner
 from personal_ai_trainer.utils.scheduler import Scheduler
 from personal_ai_trainer.knowledge_base import repository as kb_repo
-from personal_ai_trainer.exceptions import AgentError
 
 # --- Constants ---
 TEST_USER_ID = "test-user-123"
@@ -103,7 +90,6 @@ def test_02_knowledge_base_integration(mock_kb_get_supabase, mock_supabase_clien
     assert returned_id == doc_id
 
     # 2. Test searching for similar documents
-    query_text = "running cadence tips"
     query_embedding = [0.11] * 1536
     mock_get_embedding.return_value = query_embedding
     mock_search_response = MagicMock(name="SearchResponseMock_test02")
@@ -401,7 +387,7 @@ def test_08_end_to_end_flow(mock_agent_get_openai, mock_kb_get_supabase, mock_su
 
     # --- 6. Simulate nightly adjustment ---
     mock_oura_wrapper_instance.get_readiness_data.return_value = [{'score': 60, 'summary_date': '2025-05-06'}]
-    mock_insert_resp_bio2 = MagicMock(data=[{"metrics_id": "metrics-e2e-2"}], error=None)
+    MagicMock(data=[{"metrics_id": "metrics-e2e-2"}], error=None)
     # Patch the insert().execute() for this specific call (if adjustment logic inserts)
     # with patch.object(mock_supabase_client.table(readiness_table).insert.return_value, 'execute', return_value=mock_insert_resp_bio2) as mock_bio2_insert_execute:
     #     pass # Call adjustment logic here if it inserts

@@ -7,7 +7,7 @@ This module provides functionality to:
 - Return relevant research documents for further processing
 """
 
-from typing import List, Dict, Any, Optional, Union
+from typing import List, Dict, Any, Optional
 import logging
 
 from personal_ai_trainer.knowledge_base import repository as kb_repo

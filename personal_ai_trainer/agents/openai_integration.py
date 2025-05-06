@@ -6,14 +6,10 @@ and includes error handling and retry logic.
 """
 
 import os
-import time
 import logging
-from typing import Any, Dict, Optional, Callable, List, Union, cast
+from typing import Any, Dict, Optional, List
 
-import openai
 from openai import OpenAI
-from openai.types.chat import ChatCompletion
-from openai.types.embedding import Embedding
 
 from personal_ai_trainer.exceptions import OpenAIAPIError, ConfigurationError
 from personal_ai_trainer.utils.error_handling import with_error_handling

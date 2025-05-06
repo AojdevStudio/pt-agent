@@ -6,7 +6,6 @@ It serves as the central configuration point for the application's dependencies.
 """
 
 from personal_ai_trainer.di.container import DIContainer
-from personal_ai_trainer.agents.base_agent import BaseAgent
 from personal_ai_trainer.agents.research_agent.agent import ResearchAgent
 # Removed BiometricAgent import to break circular dependency
 from personal_ai_trainer.agents.biometric_agent.oura_client import OuraClientWrapper

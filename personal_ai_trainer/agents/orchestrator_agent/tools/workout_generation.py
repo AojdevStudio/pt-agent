@@ -111,7 +111,7 @@ class WorkoutGenerationTool(BaseTool):
             weekly_progressed_plan = self._apply_progression(base_template, week)
             full_plan[f"week_{week}"] = weekly_progressed_plan
 
-        print(f"Generated 4-week plan structure.")
+        print("Generated 4-week plan structure.")
         return full_plan
 
 # Example Usage (for testing purposes)

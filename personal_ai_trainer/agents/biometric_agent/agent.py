@@ -1,6 +1,6 @@
 """BiometricAgent for integrating and processing biometric data from Oura Ring."""
 
-from typing import Any, Dict, Optional, List, TYPE_CHECKING
+from typing import Any, Dict, Optional, TYPE_CHECKING
 import logging
 
 from personal_ai_trainer.agents.base_agent import BaseAgent
@@ -12,7 +12,7 @@ from .tools.plan_adjustment import PlanAdjustmentTool
 from .tools.historical_analysis import HistoricalDataAnalysisTool
 
 if TYPE_CHECKING:
-    from personal_ai_trainer.database.connection import SupabaseClient
+    pass
 
 logger = logging.getLogger(__name__)
 
