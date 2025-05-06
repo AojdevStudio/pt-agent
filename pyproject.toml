@@ -1,7 +1,11 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "pt-agent"
+name = "personal_ai_trainer"
 version = "0.1.0"
-description = "Add your description here"
+description = "Personal AI Training Agent"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -19,3 +23,6 @@ dependencies = [
     "tenacity>=9.1.2",
     "typer>=0.15.3",
 ]
+
+[tool.setuptools]
+packages = ["personal_ai_trainer"]

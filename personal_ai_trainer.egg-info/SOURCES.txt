@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+setup.py
+personal_ai_trainer/exceptions.py
+personal_ai_trainer.egg-info/PKG-INFO
+personal_ai_trainer.egg-info/SOURCES.txt
+personal_ai_trainer.egg-info/dependency_links.txt
+personal_ai_trainer.egg-info/requires.txt
+personal_ai_trainer.egg-info/top_level.txt
