@@ -18,7 +18,7 @@ The Personal AI Training Agent is your personalized fitness coach that creates w
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/AojdevStudio/pt-agent.git
 cd pt-agent
 
 # Create and activate a virtual environment (optional but recommended)
@@ -88,7 +88,7 @@ uv run python -m personal_ai_trainer.cli.main log history
 
 ```bash
 # Add a research document to improve your plans
-uv run python -m personal_ai_trainer.cli.main research add --file path/to/document.pdf
+uv run python -m personal_ai_trainer.cli.main research add --file-path "path/to/document.pdf" --title "Document Title"
 
 # Search the knowledge base
 uv run python -m personal_ai_trainer.cli.main research search --query "strength training"

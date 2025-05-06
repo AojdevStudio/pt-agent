@@ -5,9 +5,9 @@ Defines base and entity models for user profiles, workout plans, logs,
 readiness metrics, and the knowledge base.
 """
 
-from typing import List, Optional
+from typing import List, Optional, ClassVar
 from datetime import date
-from pydantic import BaseModel as PydanticBaseModel, Field
+from pydantic import BaseModel as PydanticBaseModel, Field, ConfigDict
 
 
 class BaseModel(PydanticBaseModel):
@@ -15,8 +15,7 @@ class BaseModel(PydanticBaseModel):
     Base model for all database entities.
     Provides serialization and validation.
     """
-    class Config:
-        orm_mode = True
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
 class UserProfile(BaseModel):

@@ -13,7 +13,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-TABLE_NAME = "knowledge_base"
+TABLE_NAME = "kb_chunks"
 
 
 def add_document(document: KnowledgeBase) -> Optional[str]:
@@ -28,11 +28,22 @@ def add_document(document: KnowledgeBase) -> Optional[str]:
     """
     client = get_supabase_client()
     try:
-        # Use model_dump(mode='json') for proper serialization, including dates
-        data = document.model_dump(mode='json')
-        response = client.table(TABLE_NAME).insert(data).execute()
+        # Convert the document to match kb_chunks structure
+        doc_id = document.document_id
+
+        # For simplicity, we'll store the entire document as one chunk
+        chunk_data = {
+            "doc_id": doc_id,
+            "chunk_id": f"{doc_id}_chunk1",
+            "content": document.content,
+            "embedding": document.embedding
+        }
+
+        # Insert into kb_chunks table
+        response = client.table(TABLE_NAME).insert(chunk_data).execute()
+
         if response.data and len(response.data) > 0:
-            return response.data[0].get("document_id")
+            return doc_id
         return None
     except Exception as e:
         # Log the full exception details
@@ -52,9 +63,19 @@ def get_document(document_id: str) -> Optional[KnowledgeBase]:
     """
     client = get_supabase_client()
     try:
-        response = client.table(TABLE_NAME).select("*").eq("document_id", document_id).execute()
+        # Query the kb_chunks table using doc_id
+        response = client.table(TABLE_NAME).select("*").eq("doc_id", document_id).execute()
         if response.data and len(response.data) > 0:
-            return KnowledgeBase(**response.data[0])
+            # Convert from kb_chunks format to KnowledgeBase format
+            chunk = response.data[0]
+            return KnowledgeBase(
+                document_id=chunk["doc_id"],
+                title=f"Document {chunk['doc_id']}",  # We don't have title in kb_chunks
+                content=chunk["content"],
+                embedding=chunk["embedding"],
+                source="kb_chunks",
+                date_added=None  # We don't have date_added in kb_chunks
+            )
         return None
     except Exception as e:
         logger.error(f"Failed to get document: {e}")
@@ -74,7 +95,15 @@ def update_document(document_id: str, updates: Dict[str, Any]) -> bool:
     """
     client = get_supabase_client()
     try:
-        response = client.table(TABLE_NAME).update(updates).eq("document_id", document_id).execute()
+        # Convert updates to match kb_chunks structure
+        chunk_updates = {}
+        if "content" in updates:
+            chunk_updates["content"] = updates["content"]
+        if "embedding" in updates:
+            chunk_updates["embedding"] = updates["embedding"]
+
+        # Update the kb_chunks table
+        response = client.table(TABLE_NAME).update(chunk_updates).eq("doc_id", document_id).execute()
         return response.data is not None and len(response.data) > 0
     except Exception as e:
         logger.error(f"Failed to update document: {e}")
@@ -93,7 +122,8 @@ def delete_document(document_id: str) -> bool:
     """
     client = get_supabase_client()
     try:
-        response = client.table(TABLE_NAME).delete().eq("document_id", document_id).execute()
+        # Delete from kb_chunks table using doc_id
+        response = client.table(TABLE_NAME).delete().eq("doc_id", document_id).execute()
         return response.data is not None and len(response.data) > 0
     except Exception as e:
         logger.error(f"Failed to delete document: {e}")
@@ -126,7 +156,15 @@ def query_similar_documents(query_embedding: List[float], top_k: int = 5, min_sc
         # Sort by similarity
         scored.sort(reverse=True, key=lambda x: x[0])
         for score, row in scored[:top_k]:
-            docs.append(KnowledgeBase(**row))
+            # Convert from kb_chunks format to KnowledgeBase format
+            docs.append(KnowledgeBase(
+                document_id=row["doc_id"],
+                title=f"Document {row['doc_id']}",  # We don't have title in kb_chunks
+                content=row["content"],
+                embedding=row["embedding"],
+                source="kb_chunks",
+                date_added=None  # We don't have date_added in kb_chunks
+            ))
         return docs
     except Exception as e:
         logger.error(f"Failed to query similar documents: {e}")

@@ -9,7 +9,7 @@ from personal_ai_trainer.di.container import DIContainer
 from personal_ai_trainer.agents.research_agent.agent import ResearchAgent
 # Removed BiometricAgent import to break circular dependency
 from personal_ai_trainer.agents.biometric_agent.oura_client import OuraClientWrapper
-from personal_ai_trainer.agents.orchestrator_agent.agent import OrchestratorAgent
+# Removed OrchestratorAgent import to break circular dependency
 from personal_ai_trainer.knowledge_base.embeddings import get_embedding
 from personal_ai_trainer.exceptions import ConfigurationError
 
@@ -23,10 +23,10 @@ logger = logging.getLogger(__name__)
 def get_supabase_client():
     """
     Factory function to create a Supabase client.
-    
+
     Returns:
         The Supabase client instance.
-        
+
     Raises:
         ConfigurationError: If required environment variables are missing.
     """
@@ -41,20 +41,20 @@ def get_supabase_client():
 def get_openai_client():
     """
     Factory function to create an OpenAI client.
-    
+
     Returns:
         The OpenAI client instance.
-        
+
     Raises:
         ConfigurationError: If required environment variables are missing.
     """
     from openai import OpenAI
-    
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         logger.error("OPENAI_API_KEY not found in environment variables")
         raise ConfigurationError("OPENAI_API_KEY not found in environment variables")
-        
+
     return OpenAI(api_key=api_key)
 
 
@@ -72,13 +72,13 @@ def create_biometric_agent(container: DIContainer, user_id: Optional[str]):
 def configure_services(user_id: Optional[str] = None) -> DIContainer:
     """
     Configure and register all services with the DI container.
-    
+
     Args:
         user_id (Optional[str]): Optional user ID to associate with agents.
-            
+
     Returns:
         DIContainer: The configured container.
-        
+
     Example:
         ```python
         container = configure_services(user_id="user123")
@@ -86,31 +86,34 @@ def configure_services(user_id: Optional[str] = None) -> DIContainer:
         ```
     """
     container = DIContainer()
-    
+
     # Register external clients and services
     container.register('supabase_client', get_supabase_client)
     container.register('openai_client', get_openai_client)
     container.register(OuraClientWrapper, OuraClientWrapper)
-    
+
     # Register embedding function
     container.register('get_embedding', get_embedding)
-    
+
     # Register agents
     container.register(ResearchAgent, lambda c: ResearchAgent(
         supabase_client=c.resolve('supabase_client'),
         name="ResearchAgent"
     ))
-    
+
     # Register BiometricAgent using the factory function
     container.register('BiometricAgent', lambda c: create_biometric_agent(c, user_id))
-    
+
+    # Import OrchestratorAgent locally to avoid circular import
+    from personal_ai_trainer.agents.orchestrator_agent.agent import OrchestratorAgent
+
     container.register(OrchestratorAgent, lambda c: OrchestratorAgent(
         research_agent=c.resolve(ResearchAgent),
         biometric_agent=c.resolve('BiometricAgent'), # Still resolve using string key
         supabase_client=c.resolve('supabase_client'),
         user_id=user_id
     ))
-    
+
     return container
 
 
@@ -121,13 +124,13 @@ _container = None
 def get_container(user_id: Optional[str] = None) -> DIContainer:
     """
     Get the global container instance, creating it if necessary.
-    
+
     Args:
         user_id (Optional[str]): Optional user ID to associate with agents.
-            
+
     Returns:
         DIContainer: The global container instance.
-        
+
     Example:
         ```python
         container = get_container(user_id="user123")
@@ -143,9 +146,9 @@ def get_container(user_id: Optional[str] = None) -> DIContainer:
 def reset_container() -> None:
     """
     Reset the global container instance.
-    
+
     This is useful for testing or when you need to reconfigure the container.
-    
+
     Example:
         ```python
         reset_container()  # Container will be recreated on next get_container call
