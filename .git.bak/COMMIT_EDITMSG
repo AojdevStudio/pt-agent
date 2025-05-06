@@ -1,0 +1,1 @@
+Remove .env file containing sensitive API keys and email settings to enhance security and prevent accidental exposure. This change follows the previous addition of a .gitignore file to ensure sensitive information is not tracked in the repository.
