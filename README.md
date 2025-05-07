@@ -38,71 +38,105 @@ cp .env.example .env
 
 ### 2. Configure Your Settings
 
-Edit the `.env` file with:
-- Your OpenAI API key
-- Oura Ring access token (if you have one)
-- Database connection details
+Create a `.env` file with:
+- `OPENAI_API_KEY`: Your OpenAI API key
+- `OURA_PERSONAL_ACCESS_TOKEN`: Token for accessing Oura Ring data
+- `DATABASE_URL`: Connection string for the database
 
-### 3. Try These Commands
+## Usage
 
-```bash
-# View today's workout plan
-uv run python -m personal_ai_trainer.cli.main plan today
+The Personal AI Training Agent provides a simple CLI interface:
 
-# View your weekly workout plan
-uv run python -m personal_ai_trainer.cli.main plan week
-
-# Log a completed workout
-uv run python -m personal_ai_trainer.cli.main log workout --date 2023-05-05 --notes "Felt great today"
-
-# Check your progress
-uv run python -m personal_ai_trainer.cli.main progress summary
-```
-
-## Common Tasks
-
-### Workout Planning
+### Plan Commands
 
 ```bash
-# Generate a new workout plan with a specific goal
-uv run python -m personal_ai_trainer.cli.main plan generate --goal "Improve 5k time"
+# View today's workout
+uv run python -m personal_ai_trainer.cli.main p today
 
-# View plan for a specific date
-uv run python -m personal_ai_trainer.cli.main plan day --date 2023-05-10
+# View weekly plan
+uv run python -m personal_ai_trainer.cli.main p week
+
+# View specific day
+uv run python -m personal_ai_trainer.cli.main p day monday
 ```
 
-### Logging Your Workouts
+### Log Commands
 
 ```bash
 # Log a workout
-uv run python -m personal_ai_trainer.cli.main log workout --date 2023-05-05 --notes "Felt strong"
+uv run python -m personal_ai_trainer.cli.main l workout --notes "Felt strong today"
 
-# Log specific exercises
-uv run python -m personal_ai_trainer.cli.main log exercise --name "Bench Press" --sets 3 --reps 10 --weight 50.5
+# Log exercises
+uv run python -m personal_ai_trainer.cli.main l exercise --name "Bench Press" --sets 3 --reps 8 --weight 150
 
-# View your workout history
-uv run python -m personal_ai_trainer.cli.main log history
+# View history
+uv run python -m personal_ai_trainer.cli.main l history
 ```
 
-### Adding Research
+### Research Commands
 
 ```bash
-# Add a research document to improve your plans
-uv run python -m personal_ai_trainer.cli.main research add --file-path "path/to/document.pdf" --title "Document Title"
+# Add research
+uv run python -m personal_ai_trainer.cli.main r add --file path/to/document.pdf
 
-# Search the knowledge base
-uv run python -m personal_ai_trainer.cli.main research search --query "strength training"
+# Search knowledge base
+uv run python -m personal_ai_trainer.cli.main r search "hypertrophy training"
+```
+
+### Progress Commands
+
+```bash
+# View stats
+uv run python -m personal_ai_trainer.cli.main pr stats
+
+# View badges
+uv run python -m personal_ai_trainer.cli.main pr badges
+
+# View summary
+uv run python -m personal_ai_trainer.cli.main pr summary
+```
+
+### Profile Commands
+
+```bash
+# Create a new user profile (interactive)
+uv run python -m personal_ai_trainer.cli.main profile create
+
+# List all profiles
+uv run python -m personal_ai_trainer.cli.main profile list
+
+# View an existing profile (uses default if not specified)
+uv run python -m personal_ai_trainer.cli.main profile view [--user-id YOUR_USER_ID]
+
+# Update an existing profile interactively
+uv run python -m personal_ai_trainer.cli.main profile update [--user-id YOUR_USER_ID]
+```
+
+Profile data storage:
+- To enable Supabase storage for profiles, set the following environment variables:
+  ```bash
+  export SUPABASE_URL=your_supabase_url
+  export SUPABASE_KEY=your_supabase_key
+  ```
+- If Supabase is not configured or unavailable, profiles and default user ID are stored locally under `~/.pt-agent/`:
+  - `profiles.json` contains all created profiles.
+  - `config.json` stores the `default_user_id`.
+
+After creating a profile with `profile create`, the `user_id` is set as the default, and subsequent plan commands will use it automatically:
+
+```bash
+pt p --goal strength
+pt p today
 ```
 
 ## Troubleshooting
 
 - **Commands not working?** Make sure your virtual environment is activated and you've installed the package with `uv pip install -e .`
-
 - **Missing data?** Check your `.env` file to ensure all API keys are correctly set
-
-- **Need more help?** Run any command with `--help` for more information:
+- **Need help?** Run any command with `--help`:
   ```bash
   uv run python -m personal_ai_trainer.cli.main --help
+  uv run python -m personal_ai_trainer.cli.main p --help
   ```
 
 For more detailed information, see the original documentation or contact support.

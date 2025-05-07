@@ -2,6 +2,7 @@
 
 from typing import Optional
 import typer
+from personal_ai_trainer.config.config import get_default_user_id
 from personal_ai_trainer.agents.orchestrator_agent.agent import OrchestratorAgent
 
 app = typer.Typer(help="Commands for viewing workout plans.")
@@ -18,6 +19,13 @@ def main(
     """
     # Only run this if no subcommand was invoked
     if ctx.invoked_subcommand is None and goal is not None:
+        # Determine user_id (use default if none provided)
+        if user_id is None:
+            user_id_default = get_default_user_id()
+            if not user_id_default:
+                typer.secho("No user profile found. Please create one with 'pt profile create'", fg=typer.colors.RED)
+                raise typer.Exit(code=1)
+            user_id = user_id_default
         # Create an OrchestratorAgent instance
         orchestrator = OrchestratorAgent()
 
@@ -31,7 +39,7 @@ def main(
         return plan
 
 @app.command("today")
-def view_today(user_id: str = typer.Option("default-user", "--user-id", help="User ID for the plan")):
+def view_today(user_id: str = typer.Option(None, "--user-id", help="User ID for the plan")):
     """
     View the current day's workout plan.
     """
@@ -40,6 +48,13 @@ def view_today(user_id: str = typer.Option("default-user", "--user-id", help="Us
     from personal_ai_trainer.agents.biometric_agent.agent import BiometricAgent
     from personal_ai_trainer.database.connection import get_supabase_client
 
+    # Determine user_id (use default if none provided)
+    if user_id is None:
+        user_id_default = get_default_user_id()
+        if not user_id_default:
+            typer.secho("No user profile found. Please create one with 'pt profile create'", fg=typer.colors.RED)
+            raise typer.Exit(code=1)
+        user_id = user_id_default
     # Create the necessary agents
     supabase_client = get_supabase_client()
     research_agent = ResearchAgent(supabase_client=supabase_client, name="ResearchAgent")
@@ -142,6 +157,14 @@ def generate_plan(
     """
     if not goal:
         goal = typer.prompt("Enter your fitness goal")
+
+    # Determine user_id (use default if none provided)
+    if user_id is None:
+        user_id_default = get_default_user_id()
+        if not user_id_default:
+            typer.secho("No user profile found. Please create one with 'pt profile create'", fg=typer.colors.RED)
+            raise typer.Exit(code=1)
+        user_id = user_id_default
 
     # Create an OrchestratorAgent instance
     orchestrator = OrchestratorAgent()
